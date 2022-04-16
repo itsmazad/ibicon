@@ -1,0 +1,30 @@
+.form {
+  background-color: darkslategrey;
+}
+
+.row {
+  display: flex;
+}
+
+.control {
+  flex: 1;
+  padding: 10px;
+}
+
+.control select {
+  width:100%;
+}
+
+.actions {
+  flex: 1;
+  padding: 10px 2px;
+}
+
+.actions button {
+  width:50%;
+}
+
+.actions button.active {
+  background-color: green;
+  border: 1px solid green;
+}
