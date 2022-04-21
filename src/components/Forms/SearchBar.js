@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client';
 import { FaList, FaTh } from 'react-icons/fa';
+import { GET_TYPES } from "../../store/Queries";
 
 import classes from './SearchBar.module.css';
 

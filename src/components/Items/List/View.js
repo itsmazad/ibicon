@@ -4,11 +4,11 @@ import classes from './View.module.css';
 
 function View(props) {
   const listItem = props.data.map((row) => <Row 
-    key={row.key} 
+    key={row.id} 
     id={row.id} 
-    title={row.title} 
+    title={row.name} 
     types={row.types} 
-    icon={row.icon} 
+    icon={row.image} 
     favorite={row.favorite} 
     onSelectIconHandler={props.onSelectIconHandler}
     onFavClickHandler={props.onFavClickHandler} />);
