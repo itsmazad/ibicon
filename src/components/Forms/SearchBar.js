@@ -1,24 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useState } from 'react';
 import { FaList, FaTh } from 'react-icons/fa';
-import { GET_TYPES } from "../../store/Queries";
 
 import classes from './SearchBar.module.css';
 
 function SearchBar(props) {
   const [searchParams, setSearchParams] = useState(props.defaultParams); 
-  const searchTypeOption = ['Search',
-  'Email',
-  'Phone',
-  'Laptop',
-  'Office',
-  'Car',
-  'Social',
-  'VR'];
-
-  const selectItems = searchTypeOption.map((row) => <option 
-    key={row} 
-    value={row}>{row}</option>);
+  const searchTypeOption = props.searchTypeOption; 
+  // console.log("searchTypeOption", searchTypeOption);
 
   function onClickHandler(name, value){
     let newPropsParams = Object.assign({}, searchParams);
@@ -60,7 +48,7 @@ function SearchBar(props) {
             <div className={classes.control}>
                 <select placeholder='Type' name="searchType" id='type'  onChange={onChangeHandler}>
                   <option></option>
-                  {selectItems}
+                  {searchTypeOption.map((row) => <option key={row} value={row}>{row}</option>)}
                 </select>
             </div>
             <div className={classes.actions}>

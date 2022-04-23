@@ -12,7 +12,7 @@ function View(props) {
     favorite={row.favorite} 
     onSelectIconHandler={props.onSelectIconHandler}
     onFavClickHandler={props.onFavClickHandler} />);
-    
+  
   return <ul className={classes.container}>
     {listItem}
   </ul>

@@ -12,30 +12,36 @@ import { GET_TYPES, GET_POKEMONS, GET_POKEMON_DETAILS } from "./store/Queries";
 function App() {
   let defaultParams = DefaultParams;
   const sourcePokemons = useQuery(GET_POKEMONS);
-  
+  const sourceTypes = useQuery(GET_TYPES);
 
   const [source, setSource] = useState([]);
+  const [searchTypeOption, setSearchTypeOption] = useState([]);
   const [characters, setCharacters] = useState([]);
   const [selctedChar, setSelecteCharacter] = useState();
   const [searchParam, setSearchParam] = useState(defaultParams);
 
   useEffect(() => {
+    
     if(sourcePokemons.data && sourcePokemons.data.pokemons && sourcePokemons.data.pokemons.edges){
       setSource(sourcePokemons.data.pokemons.edges);
       setCharacters(sourcePokemons.data.pokemons.edges);
+      // console.log("useEffect sourcePokemons", sourcePokemons.data.pokemons.edges);
     }
     
-  }, [sourcePokemons]);
+  }, [sourcePokemons.data]);
 
-  // useEffect(() => {
-  //   if(sourceTypes.data && sourceTypes.data.pokemons && sourceTypes.data.pokemons.edges){
-  //     const typesSets = sourceTypes.data.pokemons.edges.reduce(
-  //       (previousValue, currentValue) => previousValue.concat(currentValue.types), []
-  //     );
+  useEffect(() => {
+    if(sourceTypes.data && sourceTypes.data.pokemons && sourceTypes.data.pokemons.edges){
+      const typesSets = sourceTypes.data.pokemons.edges.reduce(
+        (previousValue, currentValue) => previousValue.concat(currentValue.types), []
+      );
 
-  //     const typesSet = new Set(typesSets);
-  //   }
-  // }, [sourceTypes]);
+      const typesSet = new Set(typesSets);
+      setSearchTypeOption(Array.from(typesSet));
+      // console.log("useEffect sourceTypes", typesSets);
+    }
+  }, [sourceTypes.data]);
+
 
   useEffect(() => {
     let items = [...source];
@@ -44,12 +50,13 @@ function App() {
     }
     items = searchParam.allChars ? items : items.filter((row) => row.favorite === true);
     if(searchParam.searchValue !== '') {
-      items = items.filter((row) => row.title.indexOf(searchParam.searchValue) > -1);
+      items = items.filter((row) => row.name.indexOf(searchParam.searchValue) > -1);
     }
     if(searchParam.searchType !== '') {
       items = items.filter((row) => row.types.includes(searchParam.searchType));
     }
     setCharacters(items);
+    // console.log("useEffect searchParam", items);
   }, [searchParam]);
 
   function onFavClickHandler(id) {
@@ -80,7 +87,7 @@ function App() {
   
   return (
     <div>
-      {!selctedChar && <SearchBar defaultParams={defaultParams} updateDefaultParam={setSearchParam} /> }
+      {!selctedChar && <SearchBar defaultParams={defaultParams} searchTypeOption={searchTypeOption} updateDefaultParam={setSearchParam} /> }
       {selctedChar && <ItemDetails data={selctedChar} onFavClickHandler={onFavClickHandler} onSelectIconHandler={onSelectIconHandler} /> }
       {!selctedChar && searchParam && searchParam.viewTypeList && <ItemsListView data={characters} onFavClickHandler={onFavClickHandler} onSelectIconHandler={onSelectIconHandler}/> }
       {!selctedChar && searchParam && !searchParam.viewTypeList && <ItemsGridView data={characters} onFavClickHandler={onFavClickHandler} onSelectIconHandler={onSelectIconHandler} /> }
