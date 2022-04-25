@@ -67,26 +67,21 @@ function App() {
 
   function onFavClickHandler(id, status) {
     if(status) {
+      mutateFunctionFavorite({ 
+        variables: { id: id },
+        refetchQueries: [
+          GET_POKEMONS
+        ]
+      });
+    } else {
       mutateFunctionUnFavorite({ 
         variables: { id: id },
-        update: (cache, { data: { resultItem } }) => {}
-      })
-    } else {
-      mutateFunctionFavorite({ variables: { id: id } });
-    }
-
-    for (let i = 0; i < source.length; i++) {
-      if(source[i].id === id) {
-        
-      }
+        refetchQueries: [
+          GET_POKEMONS
+        ]
+      });
     }
     setDataForGui();
-    // setSource(source);
-    // let newCharacters = [...source]
-    // if(!searchParam.allChars) {
-    //   newCharacters = newCharacters.filter((row) => row.favorite === true);
-    // }
-    // setCharacters(newCharacters);
   }
 
   function onSelectIconHandler(id){
