@@ -66,6 +66,7 @@ function App() {
   }
 
   function onFavClickHandler(id, status) {
+    let resultData = null;
     if(status) {
       mutateFunctionFavorite({ 
         variables: { id: id },
@@ -73,6 +74,7 @@ function App() {
           GET_POKEMONS
         ]
       });
+      // resultData = mutateFavoriteObj.data.favoritePokemon;
     } else {
       mutateFunctionUnFavorite({ 
         variables: { id: id },
@@ -80,12 +82,16 @@ function App() {
           GET_POKEMONS
         ]
       });
+      // resultData = mutateUnFavoriteObj.data.unFavoritePokemon;
+    }
+    if(resultData && resultData.id && selctedChar.id === resultData.id){
+      setSelecteCharacter(resultData);
     }
     setDataForGui();
   }
 
   function onSelectIconHandler(id){
-    const selectedItem = characters.find((row) => row.id === id);
+    const selectedItem = source.find((row) => row.id === id);
     setSelecteCharacter(selectedItem);
   }
 

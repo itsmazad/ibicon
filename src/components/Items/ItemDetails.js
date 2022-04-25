@@ -15,11 +15,11 @@ function ItemDetails(props) {
         <div className={classes.types}>{item.types}</div>
       </div>
       <div className={classes.action}>
-        { item.favorite && 
-          <FaHeart onClick={() => props.onFavClickHandler(item.id)} />
+        { item.isFavorite && 
+          <FaHeart onClick={() => props.onFavClickHandler(item.id, false)} />
         }
-        { !item.favorite && 
-          <FaRegHeart onClick={() => props.onFavClickHandler(item.id)} />
+        { !item.isFavorite && 
+          <FaRegHeart onClick={() => props.onFavClickHandler(item.id, true)} />
         }
       </div>
     </div>
