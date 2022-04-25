@@ -1,5 +1,5 @@
 import {useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 
 import SearchBar from './components/Forms/SearchBar';
 import ItemsListView from './components/Items/List/View';
@@ -7,12 +7,16 @@ import ItemsGridView from './components/Items/Grid/View';
 import ItemDetails from './components/Items/ItemDetails';
 import DefaultParams from './components/Forms/SearchBarDto';
 
-import { GET_TYPES, GET_POKEMONS, GET_POKEMON_DETAILS } from "./store/Queries";
+import { GET_TYPES, GET_POKEMONS, GET_POKEMON_DETAILS, SET_FAVORITE, SET_UNFAVORITE } from "./store/Queries";
 
 function App() {
   let defaultParams = DefaultParams;
-  const sourcePokemons = useQuery(GET_POKEMONS);
+  let sourcePokemons = useQuery(GET_POKEMONS);
   const sourceTypes = useQuery(GET_TYPES);
+  const [mutateFunctionFavorite, mutateFavoriteObj] = useMutation(SET_FAVORITE);
+  const [mutateFunctionUnFavorite, mutateUnFavoriteObj] = useMutation(SET_UNFAVORITE);
+  
+
 
   const [source, setSource] = useState([]);
   const [searchTypeOption, setSearchTypeOption] = useState([]);
@@ -21,13 +25,12 @@ function App() {
   const [searchParam, setSearchParam] = useState(defaultParams);
 
   useEffect(() => {
-    
     if(sourcePokemons.data && sourcePokemons.data.pokemons && sourcePokemons.data.pokemons.edges){
-      setSource(sourcePokemons.data.pokemons.edges);
-      setCharacters(sourcePokemons.data.pokemons.edges);
+      const sortedData= [...sourcePokemons.data.pokemons.edges].sort((a, b) => a.name > b.name ? 1 : -1)
+      setSource(sortedData);
+      setCharacters(sortedData);
       // console.log("useEffect sourcePokemons", sourcePokemons.data.pokemons.edges);
     }
-    
   }, [sourcePokemons.data]);
 
   useEffect(() => {
@@ -35,7 +38,6 @@ function App() {
       const typesSets = sourceTypes.data.pokemons.edges.reduce(
         (previousValue, currentValue) => previousValue.concat(currentValue.types), []
       );
-
       const typesSet = new Set(typesSets);
       setSearchTypeOption(Array.from(typesSet));
       // console.log("useEffect sourceTypes", typesSets);
@@ -44,11 +46,16 @@ function App() {
 
 
   useEffect(() => {
+    setDataForGui();
+    // console.log("useEffect searchParam", items);
+  }, [searchParam]);
+
+  function setDataForGui(){
     let items = [...source];
     if(!searchParam){
       return;
     }
-    items = searchParam.allChars ? items : items.filter((row) => row.favorite === true);
+    items = searchParam.allChars ? items : items.filter((row) => row.isFavorite === true);
     if(searchParam.searchValue !== '') {
       items = items.filter((row) => row.name.indexOf(searchParam.searchValue) > -1);
     }
@@ -56,21 +63,30 @@ function App() {
       items = items.filter((row) => row.types.includes(searchParam.searchType));
     }
     setCharacters(items);
-    // console.log("useEffect searchParam", items);
-  }, [searchParam]);
+  }
 
-  function onFavClickHandler(id) {
+  function onFavClickHandler(id, status) {
+    if(status) {
+      mutateFunctionUnFavorite({ 
+        variables: { id: id },
+        update: (cache, { data: { resultItem } }) => {}
+      })
+    } else {
+      mutateFunctionFavorite({ variables: { id: id } });
+    }
+
     for (let i = 0; i < source.length; i++) {
       if(source[i].id === id) {
-        source[i].favorite = !source[i].favorite
+        
       }
     }
+    setDataForGui();
     // setSource(source);
-    let newCharacters = [...source]
-    if(!searchParam.allChars) {
-      newCharacters = newCharacters.filter((row) => row.favorite === true);
-    }
-    setCharacters(newCharacters);
+    // let newCharacters = [...source]
+    // if(!searchParam.allChars) {
+    //   newCharacters = newCharacters.filter((row) => row.favorite === true);
+    // }
+    // setCharacters(newCharacters);
   }
 
   function onSelectIconHandler(id){

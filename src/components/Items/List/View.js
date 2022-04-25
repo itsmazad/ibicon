@@ -9,7 +9,7 @@ function View(props) {
     title={row.name} 
     types={row.types} 
     icon={row.image} 
-    favorite={row.favorite} 
+    favorite={row.isFavorite} 
     onSelectIconHandler={props.onSelectIconHandler}
     onFavClickHandler={props.onFavClickHandler} />);
   

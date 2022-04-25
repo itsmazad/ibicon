@@ -12,10 +12,10 @@ function Card(props) {
       </div>
       <div className={classes.action}>
         { props.favorite && 
-            <FaHeart onClick={() => props.onFavClickHandler(props.id)} />
+            <FaHeart onClick={() => props.onFavClickHandler(props.id, false)} />
         }
         { !props.favorite && 
-          <FaRegHeart onClick={() => props.onFavClickHandler(props.id)} />
+          <FaRegHeart onClick={() => props.onFavClickHandler(props.id, true)} />
         }
       </div>
     </div>

@@ -57,5 +57,23 @@ query {
       id
     }
   }
-} `
+} `;
+
+export const SET_FAVORITE = gql`
+  mutation FavoritePokemon($id: ID!) {
+    favoritePokemon(id: $id) {
+      id
+      isFavorite
+    }
+  }
+`;
+
+export const SET_UNFAVORITE = gql`
+  mutation UnFavoritePokemon($id: ID!){
+    unFavoritePokemon(id: $id) {
+      id
+      isFavorite
+    }
+  }
+`;
 
