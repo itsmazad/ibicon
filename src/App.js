@@ -1,4 +1,4 @@
-import {useState, useEffect } from 'react';
+import {useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 
 import SearchBar from './components/Forms/SearchBar';
@@ -16,9 +16,7 @@ function App() {
   const [mutateFunctionFavorite, mutateFavoriteObj] = useMutation(SET_FAVORITE);
   const [mutateFunctionUnFavorite, mutateUnFavoriteObj] = useMutation(SET_UNFAVORITE);
   
-
-
-  const [source, setSource] = useState([]);
+  let source = useRef([]);
   const [searchTypeOption, setSearchTypeOption] = useState([]);
   const [characters, setCharacters] = useState([]);
   const [selctedChar, setSelecteCharacter] = useState();
@@ -27,9 +25,11 @@ function App() {
   useEffect(() => {
     if(sourcePokemons.data && sourcePokemons.data.pokemons && sourcePokemons.data.pokemons.edges){
       const sortedData= [...sourcePokemons.data.pokemons.edges].sort((a, b) => a.name > b.name ? 1 : -1)
-      setSource(sortedData);
-      setCharacters(sortedData);
-      // console.log("useEffect sourcePokemons", sourcePokemons.data.pokemons.edges);
+      source.current = sortedData;
+      setDataForGui();
+      if(selctedChar && selctedChar.id){
+        onSelectIconHandler(selctedChar.id );
+      }
     }
   }, [sourcePokemons.data]);
 
@@ -40,18 +40,16 @@ function App() {
       );
       const typesSet = new Set(typesSets);
       setSearchTypeOption(Array.from(typesSet));
-      // console.log("useEffect sourceTypes", typesSets);
     }
   }, [sourceTypes.data]);
 
 
   useEffect(() => {
     setDataForGui();
-    // console.log("useEffect searchParam", items);
   }, [searchParam]);
 
   function setDataForGui(){
-    let items = [...source];
+    let items = [...source.current];
     if(!searchParam){
       return;
     }
@@ -66,7 +64,6 @@ function App() {
   }
 
   function onFavClickHandler(id, status) {
-    let resultData = null;
     if(status) {
       mutateFunctionFavorite({ 
         variables: { id: id },
@@ -74,7 +71,6 @@ function App() {
           GET_POKEMONS
         ]
       });
-      // resultData = mutateFavoriteObj.data.favoritePokemon;
     } else {
       mutateFunctionUnFavorite({ 
         variables: { id: id },
@@ -82,16 +78,11 @@ function App() {
           GET_POKEMONS
         ]
       });
-      // resultData = mutateUnFavoriteObj.data.unFavoritePokemon;
-    }
-    if(resultData && resultData.id && selctedChar.id === resultData.id){
-      setSelecteCharacter(resultData);
-    }
-    setDataForGui();
+    }    
   }
 
   function onSelectIconHandler(id){
-    const selectedItem = source.find((row) => row.id === id);
+    const selectedItem = source.current.find((row) => row.id === id);
     setSelecteCharacter(selectedItem);
   }
 
