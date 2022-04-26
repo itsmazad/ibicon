@@ -39,7 +39,7 @@ function App() {
         (previousValue, currentValue) => previousValue.concat(currentValue.types), []
       );
       const typesSet = new Set(typesSets);
-      setSearchTypeOption(Array.from(typesSet));
+      setSearchTypeOption(Array.from(typesSet).sort());
     }
   }, [sourceTypes.data]);
 
