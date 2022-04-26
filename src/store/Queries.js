@@ -25,8 +25,8 @@ export const GET_POKEMONS = gql`
 `;
 
 export const GET_POKEMON_DETAILS = gql`
-query {
-  pokemonById(id: ID)  {
+query PokemonById($id: ID!)  {
+  pokemonById(id: $id)  {
     id
     number
     name
@@ -42,6 +42,11 @@ query {
     isFavorite
     weight {
       minimum
+      maximum
+    }
+    height {
+      minimum
+      maximum
     }
     attacks {
       fast {

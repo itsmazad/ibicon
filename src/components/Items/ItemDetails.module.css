@@ -12,9 +12,10 @@
   width:100%;
 }
 
-.actions {
+.action, .detail {
   flex: 1;
   padding: 10px 2px;
+  border: 1px solid blue;
 }
 
 .actions button {

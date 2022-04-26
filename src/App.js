@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
 
 import SearchBar from './components/Forms/SearchBar';
 import ItemsListView from './components/Items/List/View';
@@ -11,8 +11,9 @@ import { GET_TYPES, GET_POKEMONS, GET_POKEMON_DETAILS, SET_FAVORITE, SET_UNFAVOR
 
 function App() {
   let defaultParams = DefaultParams;
-  let sourcePokemons = useQuery(GET_POKEMONS);
+  const sourcePokemons = useQuery(GET_POKEMONS);
   const sourceTypes = useQuery(GET_TYPES);
+  const [sourcePokemonFetcher, sourcePokemon] = useLazyQuery(GET_POKEMON_DETAILS);
   const [mutateFunctionFavorite, mutateFavoriteObj] = useMutation(SET_FAVORITE);
   const [mutateFunctionUnFavorite, mutateUnFavoriteObj] = useMutation(SET_UNFAVORITE);
   
@@ -27,8 +28,8 @@ function App() {
       const sortedData= [...sourcePokemons.data.pokemons.edges].sort((a, b) => a.name > b.name ? 1 : -1)
       source.current = sortedData;
       setDataForGui();
-      if(selctedChar && selctedChar.id){
-        onSelectIconHandler(selctedChar.id );
+      if(sourcePokemon && sourcePokemon.data && sourcePokemon.data.id){
+        onSelectIconHandler( sourcePokemon.data.id );
       }
     }
   }, [sourcePokemons.data]);
@@ -43,6 +44,11 @@ function App() {
     }
   }, [sourceTypes.data]);
 
+  useEffect(() => {
+    if(sourcePokemon.data && sourcePokemon.data.pokemonById){
+      setSelecteCharacter(sourcePokemon.data.pokemonById);
+    }
+  }, [sourcePokemon.data]);
 
   useEffect(() => {
     setDataForGui();
@@ -83,7 +89,11 @@ function App() {
 
   function onSelectIconHandler(id){
     const selectedItem = source.current.find((row) => row.id === id);
-    setSelecteCharacter(selectedItem);
+    if(selectedItem) {
+      sourcePokemonFetcher({ variables: { id: id } });
+    } else {
+      setSelecteCharacter(null);
+    }
   }
 
   if(sourcePokemons.loading) {
