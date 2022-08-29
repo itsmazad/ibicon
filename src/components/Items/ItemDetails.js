@@ -1,8 +1,14 @@
 import { FaHeart, FaRegHeart, FaWindowClose } from "react-icons/fa"; 
+import { SetFavorite, SetUnFavorite } from "../../services/Characters";
 
 import classes from './ItemDetails.module.css';
 
 function ItemDetails(props) {
+
+  function onFavClickHandler(id, status) {
+      SetFavorite(id)
+  }
+
   const item = props.data; 
   return <div className={classes.details}>
     <img alt={item.title} src={item.image} />
@@ -16,10 +22,10 @@ function ItemDetails(props) {
       </div>
       <div className={classes.action}>
         { item.isFavorite && 
-          <FaHeart onClick={() => props.onFavClickHandler(item.id, false)} />
+          <FaHeart onClick={() => onFavClickHandler(item.id, false)} />
         }
         { !item.isFavorite && 
-          <FaRegHeart onClick={() => props.onFavClickHandler(item.id, true)} />
+          <FaRegHeart onClick={() => onFavClickHandler(item.id, true)} />
         }
       </div>
       <div className={classes.action}>
