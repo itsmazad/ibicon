@@ -41,20 +41,14 @@ function FetchDetails(id, setState) {
 }
 
 function SetFavorite(id) {
-  useMutation(SET_FAVORITE, { 
-    variables: { id: id },
-    refetchQueries: [
-      GET_POKEMONS
-    ]
+  return useMutation(SET_FAVORITE, { 
+    variables: { id: id }
   });   
 }
 
 function SetUnFavorite(id) {
-  useMutation(SET_UNFAVORITE, { 
-    variables: { id: id },
-    refetchQueries: [
-      GET_POKEMONS
-    ]
+  return useMutation(SET_UNFAVORITE, { 
+    variables: { id: id }
   }); 
 }
 
