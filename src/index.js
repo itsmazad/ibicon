@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import ApolloClient from 'apollo-boost';
-// import { ApolloProvider } from '@apollo/react-hooks';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
 import './index.css';

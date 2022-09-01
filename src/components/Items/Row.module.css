@@ -6,4 +6,10 @@
 
 .info {
   display: flex;
+  margin-left: 2%;
+}
+
+.imglink {
+  max-height: 90%;
+  padding: 10%;
 }

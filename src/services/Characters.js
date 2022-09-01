@@ -8,8 +8,8 @@ function FetchAllData(setState) {
       // console.log('Completed GET_POKEMONS', data?.pokemons?.edges); 
       setState(data?.pokemons?.edges || null);
     }, 
-    fetchPolicy: 'network-only', 
-    notifyOnNetworkStatusChange: true
+    // fetchPolicy: 'network-only', 
+    // notifyOnNetworkStatusChange: true
   });
 }
 
@@ -23,8 +23,8 @@ function FetchTypes(setState) {
       const typesSet = new Set(typesSets);
       setState(Array.from(typesSet).sort());
     }, 
-    fetchPolicy: 'network-only', 
-    notifyOnNetworkStatusChange: true
+    // fetchPolicy: 'network-only', 
+    // notifyOnNetworkStatusChange: true
   });
 }
 
@@ -35,8 +35,8 @@ function FetchDetails(id, setState) {
       // console.log('Completed GET_POKEMON_DETAILS', data?.pokemonById); 
       setState(data?.pokemonById || null); 
     }, 
-    fetchPolicy: 'network-only', 
-    notifyOnNetworkStatusChange: true
+    // fetchPolicy: 'network-only', 
+    // notifyOnNetworkStatusChange: true
   });
 }
 
